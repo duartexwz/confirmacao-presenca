@@ -4,6 +4,7 @@
     {
       "source": "/(.*)",
       "destination": "/back/api/main.py"
-    }
+    },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
