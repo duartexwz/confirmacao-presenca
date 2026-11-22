@@ -30,3 +30,5 @@ dist/
 logs/
 *.log
 npm-debug.log*
+.vercel
+.env*
