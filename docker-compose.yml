@@ -1,0 +1,68 @@
+# ── Docker Compose — Confirmação de Presença ──
+# Sobe os 3 serviços: PostgreSQL, Backend (FastAPI) e Frontend (React + Nginx).
+#
+# Uso:
+#   docker compose up --build        → Sobe tudo
+#   docker compose up --build -d     → Sobe em background
+#   docker compose down              → Para tudo
+#   docker compose down -v           → Para tudo e remove volumes (apaga dados)
+
+services:
+
+  # ── Banco de Dados PostgreSQL ──
+  db:
+    image: postgres:16-alpine
+    container_name: confirmacao-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_DB: ${DB_NAME:-confirmacao_presenca}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ── Backend FastAPI ──
+  backend:
+    build:
+      context: ./back
+      dockerfile: Dockerfile
+    container_name: confirmacao-backend
+    restart: unless-stopped
+    environment:
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-confirmacao_presenca}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost,http://localhost:3000}
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # ── Frontend React (Nginx) ──
+  frontend:
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+      args:
+        # Em produção, troque pela URL real da API
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
+    container_name: confirmacao-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
+    driver: local

@@ -1,0 +1,22 @@
+:root{
+  --bg-cards: rgba(255, 255, 255, 0.8);
+  --border-input: rgb(165, 177, 184);
+  --border-input-hover: rgb(126, 167, 190);
+  --btn-primary: #5A9BD5 ;
+  --btn-secundary: #2677be;
+  --text-primary: #19325C;
+  --text-secundary: #2B3E5A;
+  --text-terceary: #f1f2f3f4;
+}
+
+*{
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body{
+  background: url(./assets/background-confirmacao.jpeg);
+  background-repeat: no-repeat;
+}
+

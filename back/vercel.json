@@ -1,0 +1,35 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "builds": [
+    {
+      "src": "api/main.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/docs",
+      "dest": "api/main.py"
+    },
+    {
+      "src": "/redoc",
+      "dest": "api/main.py"
+    },
+    {
+      "src": "/openapi.json",
+      "dest": "api/main.py"
+    },
+    {
+      "src": "/confirmacoes/(.*)",
+      "dest": "api/main.py"
+    },
+    {
+      "src": "/confirmacoes",
+      "dest": "api/main.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "api/main.py"
+    }
+  ]
+}
