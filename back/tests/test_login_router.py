@@ -16,7 +16,7 @@ async def test_login_endpoint(client, fake_db):
         }
     )
     response = await client.post(
-        "/api/v1/login/",
+        "/api/v1/login",
         data={"username": "mayckonkennedy877@gmail.com", "password": "Mk@220525"},
     )
     assert response.status_code == 200

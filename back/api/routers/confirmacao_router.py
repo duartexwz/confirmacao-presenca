@@ -29,7 +29,7 @@ router = APIRouter(
 
 
 @router.post(
-    "/",
+    "",
     response_model=ConfirmacaoResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Confirmar presença",
@@ -53,7 +53,7 @@ async def confirmar_presenca(
 
 
 @router.get(
-    "/",
+    "",
     response_model=ConfirmacaoListResponse,
     summary="Listar confirmações",
     description="Retorna a lista paginada de convidados que confirmaram presença.",

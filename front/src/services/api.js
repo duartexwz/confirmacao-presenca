@@ -7,7 +7,7 @@ function authHeaders(token) {
 }
 
 export async function confirmarPresenca(nome) {
-  const response = await fetch(`${API_URL}/api/v1/confirmacoes/`, {
+  const response = await fetch(`${API_URL}/api/v1/confirmacoes`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ nome }),
@@ -24,7 +24,7 @@ export async function confirmarPresenca(nome) {
 
 export async function listarConfirmacoes(offset = 0, limit = 10) {
   const params = new URLSearchParams({ offset, limit })
-  const response = await fetch(`${API_URL}/api/v1/confirmacoes/?${params}`)
+  const response = await fetch(`${API_URL}/api/v1/confirmacoes?${params}`)
 
   if (!response.ok) {
     throw new Error('Erro ao buscar confirmações.')
@@ -38,7 +38,7 @@ export async function loginAdmin(username, password) {
   body.append('username', username)
   body.append('password', password)
 
-  const response = await fetch(`${API_URL}/api/v1/login/`, {
+  const response = await fetch(`${API_URL}/api/v1/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: body.toString(),
@@ -55,7 +55,7 @@ export async function loginAdmin(username, password) {
 
 export async function listarAdministradores(token, offset = 0, limit = 10) {
   const params = new URLSearchParams({ offset, limit })
-  const response = await fetch(`${API_URL}/api/v1/admin/?${params}`, {
+  const response = await fetch(`${API_URL}/api/v1/admin?${params}`, {
     headers: authHeaders(token),
   })
 
@@ -69,7 +69,7 @@ export async function listarAdministradores(token, offset = 0, limit = 10) {
 }
 
 export async function cadastrarAdmin(token, admin) {
-  const response = await fetch(`${API_URL}/api/v1/admin/`, {
+  const response = await fetch(`${API_URL}/api/v1/admin`, {
     method: 'POST',
     headers: authHeaders(token),
     body: JSON.stringify(admin),

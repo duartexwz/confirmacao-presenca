@@ -21,7 +21,7 @@ login_service = TokenServices()
 limiter = Limiter(key_func=get_remote_address)
 
 
-@router.post("/", summary="Login", status_code=HTTPStatus.OK)
+@router.post("", summary="Login", status_code=HTTPStatus.OK)
 @limiter.limit("5/minute")
 async def login(request: Request, response: Response, conn: T_Session, form_data: T_FormData):
     try:

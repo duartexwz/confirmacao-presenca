@@ -383,7 +383,7 @@ h4{
   border-radius: 10px;
   color: var(--text-primary);
   font-size: 1rem;
-
+  cursor: pointer;
 }
 
 @media screen and (max-width: 575px) {

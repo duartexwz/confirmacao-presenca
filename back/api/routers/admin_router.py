@@ -19,12 +19,12 @@ router = APIRouter(prefix="/api/v1/admin", tags=["Admin"])
 admin_service = AdminService()
 
 
-@router.post("/", status_code=HTTPStatus.CREATED, summary="Cadastrar Admin")
+@router.post("", status_code=HTTPStatus.CREATED, summary="Cadastrar Admin")
 async def create_admin(request: Request, conn: T_Session, current_user: T_CurrentUser, admin: AdminSchemas):
     return await admin_service.cadastrar_admin(conn=conn, current_user=current_user, admin=admin, request=request)
 
 
-@router.get("/", summary="Listar administradores", status_code=HTTPStatus.OK)
+@router.get("", summary="Listar administradores", status_code=HTTPStatus.OK)
 async def listar_administradores(conn: T_Session, current_user: T_CurrentUser, filter: T_AdminFilter):
     return await admin_service.listar_admin(conn=conn, current_user=current_user, filter=filter)
 
