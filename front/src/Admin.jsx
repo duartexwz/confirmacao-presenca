@@ -282,7 +282,7 @@ function Admin() {
           </div>
         </div>
 
-        <div className="admin-panel">
+        <div className="admin-panel admin-panel-fixed">
           <div className="admin-panel-header">
             <h3>Administradores</h3>
             <div className="admin-panel-actions">
