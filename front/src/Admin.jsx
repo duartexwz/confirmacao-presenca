@@ -242,7 +242,7 @@ function Admin() {
         {erro && <p className="mensagem-feedback erro admin-alert">{erro}</p>}
 
         <div className="admin-grid">
-        <div className="admin-panel">
+        <div className="admin-panel admin-panel-fixed">
           <div className="admin-panel-header">
             <h3>Confirmações de presença</h3>
             <span className="admin-badge">{confirmacoes.length}</span>

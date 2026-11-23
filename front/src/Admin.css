@@ -606,3 +606,28 @@
   line-height: 1.5;
   margin: 0;
 }
+
+.admin-panel-fixed {
+  height: 460px;
+  max-height: 460px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-panel-fixed .admin-table-wrap {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+.admin-panel-fixed .admin-table {
+  position: relative;
+}
+
+.admin-panel-fixed .admin-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background-color: rgba(90, 155, 213, 0.95);
+}
