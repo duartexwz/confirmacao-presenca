@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import './Admin.css'
 import {
   cadastrarAdmin,
   deletarAdmin,
@@ -175,19 +176,29 @@ function Admin() {
 
   return (
     <section id="sectionAdmin">
-      <nav className="admin-navbar">
-        <div className="admin-navbar-title">
-          <h2>Painel do Administrador</h2>
-          <span>Olá, {user.nome}</span>
+      <aside className="admin-sidebar">
+        <div className="admin-sidebar-brand">
+          <h2>Admin</h2>
+          <span>Confirmação de Presença</span>
         </div>
-        <button className="admin-btn admin-btn-danger admin-btn-sm" onClick={handleLogout}>
-          Sair
-        </button>
-      </nav>
+        <div className="admin-sidebar-user">
+          <span className="admin-sidebar-user-name">{user.nome}</span>
+          <span className="admin-sidebar-user-email">{user.username}</span>
+        </div>
+        <nav className="admin-sidebar-nav">
+          <span className="admin-sidebar-link active">Dashboard</span>
+        </nav>
+        <div className="admin-sidebar-footer">
+          <button className="admin-btn admin-btn-danger" onClick={handleLogout}>
+            Sair
+          </button>
+        </div>
+      </aside>
 
-      {erro && <p className="mensagem-feedback erro admin-alert">{erro}</p>}
+      <main className="admin-main">
+        {erro && <p className="mensagem-feedback erro admin-alert">{erro}</p>}
 
-      <div className="admin-grid">
+        <div className="admin-grid">
         <div className="admin-panel">
           <div className="admin-panel-header">
             <h3>Confirmações de presença</h3>
@@ -271,6 +282,7 @@ function Admin() {
           </div>
         </div>
       </div>
+      </main>
 
       {modalOpen && (
         <div className="admin-modal-overlay" onClick={() => setModalOpen(false)}>
