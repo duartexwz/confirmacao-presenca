@@ -122,13 +122,13 @@ function Admin() {
   if (!token || !user) {
     return (
       <section id="sectionAdmin">
-        <div className="container-section">
-          <div className="container-confirmacao">
+        <div className="admin-page">
+          <div className="admin-card">
             <div className="title-form">
               <h3>Área do Administrador</h3>
               <p>Faça login para acessar o painel.</p>
             </div>
-            <form onSubmit={handleLogin}>
+            <form className="admin-form" onSubmit={handleLogin}>
               <input
                 type="text"
                 placeholder="E-mail"
@@ -148,6 +148,7 @@ function Admin() {
               </button>
               {erro && <p className="mensagem-feedback erro">{erro}</p>}
             </form>
+            <a className="admin-back-link" href="/">Voltar ao site</a>
           </div>
         </div>
       </section>
@@ -157,10 +158,11 @@ function Admin() {
   if (!isAdmin) {
     return (
       <section id="sectionAdmin">
-        <div className="container-section">
-          <div className="container-confirmacao">
+        <div className="admin-page">
+          <div className="admin-card">
             <p className="mensagem-feedback erro">Acesso negado. Apenas administradores.</p>
-            <button onClick={handleLogout}>Sair</button>
+            <button className="admin-btn" onClick={handleLogout}>Sair</button>
+            <a className="admin-back-link" href="/">Voltar ao site</a>
           </div>
         </div>
       </section>
@@ -169,38 +171,38 @@ function Admin() {
 
   return (
     <section id="sectionAdmin">
-      <div className="container-section">
-        <div className="container-informacoes">
+      <div className="admin-dashboard">
+        <div className="admin-card">
           <div className="title-evento">
             <h3>Painel do Administrador</h3>
             <p>Olá, {user.nome}. Gerencie as confirmações e administradores.</p>
-            <button onClick={handleLogout}>Sair</button>
+            <button className="admin-btn" onClick={handleLogout}>Sair</button>
           </div>
         </div>
 
         {erro && <p className="mensagem-feedback erro">{erro}</p>}
 
-        <div className="container-confirmacao">
+        <div className="admin-card">
           <div className="title-form">
             <h3>Confirmações de presença ({confirmacoes.length})</h3>
           </div>
-          <ul>
+          <ul className="admin-list">
             {confirmacoes.map((c) => (
               <li key={c.id}>{c.nome}</li>
             ))}
           </ul>
         </div>
 
-        <div className="container-confirmacao">
+        <div className="admin-card">
           <div className="title-form">
             <h3>Administradores ({admins.length})</h3>
           </div>
-          <ul>
+          <ul className="admin-list">
             {admins.map((a) => (
               <li key={a.id}>
                 {a.nome} — {a.username}{' '}
                 {a.id !== user.id && (
-                  <button onClick={() => handleDeletarAdmin(a.id)} disabled={carregando}>
+                  <button className="admin-btn admin-btn-danger" onClick={() => handleDeletarAdmin(a.id)} disabled={carregando}>
                     Remover
                   </button>
                 )}
@@ -208,7 +210,7 @@ function Admin() {
             ))}
           </ul>
 
-          <form onSubmit={handleCadastrarAdmin}>
+          <form className="admin-form" onSubmit={handleCadastrarAdmin}>
             <h4>Novo administrador</h4>
             <input
               type="text"

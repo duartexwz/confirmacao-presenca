@@ -11,7 +11,8 @@ import Admin from './Admin'
  * e exibe feedback visual de sucesso ou erro.
  */
 function App() {
-  const [view, setView] = useState('home')
+  const isAdminRoute = window.location.pathname.startsWith('/admin')
+  const view = isAdminRoute ? 'admin' : 'home'
   const [nome, setNome] = useState('')
   const [mensagem, setMensagem] = useState('')
   const [tipoMensagem, setTipoMensagem] = useState('')   // 'sucesso' | 'erro'
@@ -49,11 +50,6 @@ function App() {
 
   return (
     <>
-     <nav style={{ padding: '1rem', textAlign: 'right' }}>
-       <button onClick={() => setView(view === 'home' ? 'admin' : 'home')}>
-         {view === 'home' ? 'Área do Admin' : 'Voltar'}
-       </button>
-     </nav>
      {view === 'admin' ? <Admin /> : (
      <section id='sectionConfirmation'>
         <div className='container-section'>
