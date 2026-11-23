@@ -31,6 +31,7 @@ function Admin() {
   const [admins, setAdmins] = useState([])
   const [modalOpen, setModalOpen] = useState(false)
   const [modal, setModal] = useState({ open: false, title: '', message: '', type: 'info', onConfirm: null })
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const [novoAdmin, setNovoAdmin] = useState({ nome: '', username: '', password: '' })
 
   const isAdmin = user && (user.niveis_acesso_id === 1 || user.niveis_acesso_id === null)
@@ -61,6 +62,7 @@ function Admin() {
     setUser(null)
     setConfirmacoes([])
     setAdmins([])
+    setSidebarOpen(false)
   }
 
 
@@ -219,7 +221,15 @@ function Admin() {
 
   return (
     <section id="sectionAdmin">
-      <aside className="admin-sidebar">
+      <button
+        className="admin-hamburger"
+        onClick={() => setSidebarOpen(true)}
+        aria-label="Abrir menu"
+      >
+        ☰
+      </button>
+      {sidebarOpen && <div className="admin-sidebar-overlay" onClick={() => setSidebarOpen(false)} />}
+      <aside className={`admin-sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="admin-sidebar-brand">
           <h2>Admin</h2>
           <span>Confirmação de Presença</span>
@@ -232,7 +242,7 @@ function Admin() {
           <span className="admin-sidebar-link active">Dashboard</span>
         </nav>
         <div className="admin-sidebar-footer">
-          <button className="admin-btn admin-btn-danger" onClick={handleLogout}>
+          <button className="admin-btn admin-btn-danger" onClick={() => { handleLogout(); setSidebarOpen(false) }}>
             Sair
           </button>
         </div>
