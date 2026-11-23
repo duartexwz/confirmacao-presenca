@@ -33,6 +33,10 @@ class ConfirmacoesRepository:
                 criado_em TIMESTAMP WITH TIME ZONE DEFAULT NOW()
             );
         """)
+        await conn.execute("""
+            ALTER TABLE confirmacoes
+            ADD COLUMN IF NOT EXISTS criado_em TIMESTAMP WITH TIME ZONE DEFAULT NOW();
+        """)
 
     async def inserir_confirmacao(self, conn: Connection, nome: str) -> dict:
         """
