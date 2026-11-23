@@ -143,7 +143,7 @@ function Admin() {
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={carregando}
               />
-              <button type="submit" disabled={carregando}>
+              <button type="submit" className='admin-button' disabled={carregando}>
                 {carregando ? 'Entrando...' : 'Entrar'}
               </button>
               {erro && <p className="mensagem-feedback erro">{erro}</p>}

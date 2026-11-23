@@ -303,6 +303,7 @@ h4{
   font-family: 'Lora', serif;
   font-style: italic;
   transition: background-color 0.2s ease;
+  padding: 20px;
 }
 
 .admin-btn:hover {
@@ -373,6 +374,16 @@ h4{
   border-radius: 10px;
   font-family: 'Lora', serif;
   color: var(--text-secundary);
+}
+
+.admin-button{
+  padding: 10px;
+  background-color: var(--btn-primary);
+  border: none;
+  border-radius: 10px;
+  color: var(--text-primary);
+  font-size: 1rem;
+
 }
 
 @media screen and (max-width: 575px) {
