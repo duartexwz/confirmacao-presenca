@@ -608,6 +608,8 @@
 }
 
 .admin-panel-fixed {
+  width: 600px;
+  max-width: 600px;
   height: 460px;
   max-height: 460px;
   overflow: hidden;
