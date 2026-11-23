@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import { confirmarPresenca } from './services/api'
+import Admin from './Admin'
 
 /**
  * Componente principal da aplicação.
@@ -10,6 +11,7 @@ import { confirmarPresenca } from './services/api'
  * e exibe feedback visual de sucesso ou erro.
  */
 function App() {
+  const [view, setView] = useState('home')
   const [nome, setNome] = useState('')
   const [mensagem, setMensagem] = useState('')
   const [tipoMensagem, setTipoMensagem] = useState('')   // 'sucesso' | 'erro'
@@ -47,6 +49,12 @@ function App() {
 
   return (
     <>
+     <nav style={{ padding: '1rem', textAlign: 'right' }}>
+       <button onClick={() => setView(view === 'home' ? 'admin' : 'home')}>
+         {view === 'home' ? 'Área do Admin' : 'Voltar'}
+       </button>
+     </nav>
+     {view === 'admin' ? <Admin /> : (
      <section id='sectionConfirmation'>
         <div className='container-section'>
           <div className='container-informacoes'>
@@ -95,6 +103,7 @@ function App() {
           </div>
         </div>
      </section>
+     )}
     </>
   )
 }

@@ -5,10 +5,10 @@ Define os endpoints REST para registrar, listar, buscar e remover
 confirmações de presença dos convidados.
 
 Endpoints:
-    POST   /confirmacoes       → Confirmar presença de um convidado.
-    GET    /confirmacoes       → Listar confirmações (paginado).
-    GET    /confirmacoes/{id}  → Buscar confirmação por UUID.
-    DELETE /confirmacoes/{id}  → Remover confirmação por UUID.
+    POST   /api/v1/confirmacoes       → Confirmar presença de um convidado.
+    GET    /api/v1/confirmacoes       → Listar confirmações (paginado).
+    GET    /api/v1/confirmacoes/{id}  → Buscar confirmação por UUID.
+    DELETE /api/v1/confirmacoes/{id}  → Remover confirmação por UUID.
 """
 
 from asyncpg import Connection
@@ -20,10 +20,10 @@ from api.schemas.confirmacao_schemas import (
     ConfirmacaoListResponse,
     ConfirmacaoResponse,
 )
-from api.services import confirmacao_service
+from api.services.confirmacao_service import confirmacao_service
 
 router = APIRouter(
-    prefix="/confirmacoes",
+    prefix="/api/v1/confirmacoes",
     tags=["Confirmações de Presença"],
 )
 
@@ -33,8 +33,7 @@ router = APIRouter(
     response_model=ConfirmacaoResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Confirmar presença",
-    description="Registra a confirmação de presença de um convidado. "
-    "Retorna erro 409 se o nome já estiver confirmado.",
+    description="Registra a confirmação de presença de um convidado. Retorna erro 409 se o nome já estiver confirmado.",
 )
 async def confirmar_presenca(
     dados: ConfirmacaoCreate,

@@ -1,23 +1,24 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "$schema": "https://openapi.vercel.sh/",
+  "regions": ["gru1"],
   "services": {
-    "back": {
-      "root": "back",
-      "framework": "fastapi"
-    },
     "front": {
       "root": "front",
-      "framework": "vite"
+      "framework": "vite",
+      "buildCommand": "npm run build",
+      "installCommand": "npm install"
+    },
+    "back": {
+      "root": "back",
+      "framework": "fastapi",
+      "entrypoint": "api.main:app",
+      "installCommand": "pip install -r requirements.txt"
     }
   },
   "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": {
-        "service": "front"
-      }
-    }
-  ]
+    { "source": "/api/:path*", "destination": { "type": "service", "service": "back" } },
+    { "source": "/(.*)", "destination": { "type": "service", "service": "front" } }
+  ],
+  "cleanUrls": false,
+  "trailingSlash": false
 }
-
-

@@ -1,83 +1,75 @@
 """
 Ponto de entrada da aplicação FastAPI — Confirmação de Presença API.
-
-Responsável por:
-    - Instanciar a aplicação FastAPI com metadados da documentação.
-    - Configurar CORS para permitir requisições do frontend.
-    - Gerenciar o ciclo de vida do pool de conexões com o banco de dados.
-    - Criar a tabela de confirmações automaticamente ao iniciar.
-    - Registrar os routers da API.
-
-Para executar:
-    uvicorn api.main:app --reload
 """
 
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 
 from api.database import create_db_pool
+from api.repositories.admin_repository import AdminRepository
 from api.repositories.confirmacao_repository import criar_tabela_confirmacoes
-from api.routers import confirmacao_router
+from api.routers import admin_router, confirmacao_router, login_router
+from api.security import get_password_hash
 from api.settings import settings
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """
-    Gerencia o ciclo de vida da aplicação.
-
-    No startup:
-        - Cria o pool de conexões com o PostgreSQL.
-        - Cria a tabela `confirmacoes` caso não exista.
-
-    No shutdown:
-        - Fecha todas as conexões do pool.
-    """
-    # ── Startup ──
     app.state.pool = await create_db_pool()
 
     async with app.state.pool.acquire() as conn:
         await criar_tabela_confirmacoes(conn)
 
+        admin_repo = AdminRepository()
+        await admin_repo.criar_tabela_admin(conn)
+
+        # Garante a existência do administrador padrão.
+        admin_email = "mayckonkennedy877@gmail.com"
+        existente = await admin_repo.buscar_administradores_por_email(conn, admin_email)
+        if not existente:
+            await admin_repo.inserir_administrador(
+                conn,
+                {
+                    "nome": "Mayckon Kennedy",
+                    "username": admin_email,
+                    "password": get_password_hash("Mk@220525"),
+                    "niveis_acesso_id": 1,
+                },
+            )
+
+    app.state.limiter = login_router.limiter
     yield
 
-    # ── Shutdown ──
     await app.state.pool.close()
 
 
 app = FastAPI(
     title="Confirmação de Presença API",
-    description=(
-        "API para gerenciar confirmações de presença do "
-        "Jantar de Noivado — Mayckon & Duda. "
-        "Permite registrar, listar, buscar e remover confirmações."
-    ),
+    description="API para gerenciar confirmações de presença do Jantar de Noivado — Mayckon & Duda.",
     version="1.0.0",
     lifespan=lifespan,
 )
 
-# ── CORS ──
-# Permite que o frontend React (Vite) se comunique com a API.
+app.state.limiter = login_router.limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS.split(","),
+    allow_origins=[o.strip() for o in settings.CORS_ORIGINS.split(",") if o.strip()],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# ── Routers ──
 app.include_router(confirmacao_router.router)
+app.include_router(admin_router.router)
+app.include_router(login_router.router)
 
 
-@app.get(
-    "/",
-    tags=["Health"],
-    summary="Health check",
-    description="Verifica se a API está no ar.",
-)
+@app.get("/", tags=["Health"])
 async def health_check() -> dict:
-    """Retorna status de saúde da API."""
     return {"status": "ok", "message": "API de Confirmação de Presença está ativa!"}

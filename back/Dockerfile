@@ -12,6 +12,8 @@ RUN pip install --no-cache-dir poetry
 # Copia arquivos de dependência primeiro (cache de camadas Docker)
 COPY pyproject.toml poetry.lock ./
 
+RUN poetry self add poetry-plugin-export
+
 # Exporta dependências para requirements.txt (evita instalar poetry em produção)
 RUN poetry export -f requirements.txt --without-hashes -o requirements.txt
 
