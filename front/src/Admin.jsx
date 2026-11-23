@@ -30,6 +30,7 @@ function Admin() {
   const [confirmacoes, setConfirmacoes] = useState([])
   const [admins, setAdmins] = useState([])
   const [modalOpen, setModalOpen] = useState(false)
+  const [modal, setModal] = useState({ open: false, title: '', message: '', type: 'info', onConfirm: null })
   const [novoAdmin, setNovoAdmin] = useState({ nome: '', username: '', password: '' })
 
   const isAdmin = user && (user.niveis_acesso_id === 1 || user.niveis_acesso_id === null)
@@ -60,6 +61,15 @@ function Admin() {
     setUser(null)
     setConfirmacoes([])
     setAdmins([])
+  }
+
+
+  function openModal({ title = '', message = '', type = 'info', onConfirm = null }) {
+    setModal({ open: true, title, message, type, onConfirm })
+  }
+
+  function closeModal() {
+    setModal({ open: false, title: '', message: '', type: 'info', onConfirm: null })
   }
 
   async function carregarDados() {
@@ -109,32 +119,50 @@ function Admin() {
     }
   }
 
-  async function handleRemoverConfirmacao(id) {
-    if (!window.confirm('Remover esta confirmação?')) return
-    setCarregando(true)
-    setErro('')
-    try {
-      await removerConfirmacao(token, id)
-      await carregarDados()
-    } catch (err) {
-      setErro(err.message)
-    } finally {
-      setCarregando(false)
-    }
+  function askRemoverConfirmacao(id) {
+    openModal({
+      title: 'Remover confirmação',
+      message: 'Deseja remover esta confirmação de presença?',
+      type: 'confirm',
+      onConfirm: async () => {
+        closeModal()
+        setCarregando(true)
+        setErro('')
+        try {
+          await removerConfirmacao(token, id)
+          await carregarDados()
+          openModal({ title: 'Sucesso', message: 'Confirmação removida com sucesso.', type: 'success' })
+        } catch (err) {
+          setErro(err.message)
+          openModal({ title: 'Erro', message: err.message, type: 'error' })
+        } finally {
+          setCarregando(false)
+        }
+      },
+    })
   }
 
-  async function handleDeletarAdmin(id) {
-    if (!window.confirm('Remover este administrador?')) return
-    setCarregando(true)
-    setErro('')
-    try {
-      await deletarAdmin(token, id)
-      await carregarDados()
-    } catch (err) {
-      setErro(err.message)
-    } finally {
-      setCarregando(false)
-    }
+  function askDeletarAdmin(id) {
+    openModal({
+      title: 'Remover administrador',
+      message: 'Deseja remover este administrador?',
+      type: 'confirm',
+      onConfirm: async () => {
+        closeModal()
+        setCarregando(true)
+        setErro('')
+        try {
+          await deletarAdmin(token, id)
+          await carregarDados()
+          openModal({ title: 'Sucesso', message: 'Administrador removido com sucesso.', type: 'success' })
+        } catch (err) {
+          setErro(err.message)
+          openModal({ title: 'Erro', message: err.message, type: 'error' })
+        } finally {
+          setCarregando(false)
+        }
+      },
+    })
   }
 
   if (!token || !user) {
@@ -241,7 +269,7 @@ function Admin() {
                     <td>
                       <button
                         className="admin-btn admin-btn-danger admin-btn-sm"
-                        onClick={() => handleRemoverConfirmacao(c.id)}
+                        onClick={() => askRemoverConfirmacao(c.id)}
                         disabled={carregando}
                       >
                         Remover
@@ -291,7 +319,7 @@ function Admin() {
                       {a.id !== user.id ? (
                         <button
                           className="admin-btn admin-btn-danger admin-btn-sm"
-                          onClick={() => handleDeletarAdmin(a.id)}
+                          onClick={() => askDeletarAdmin(a.id)}
                           disabled={carregando}
                         >
                           Remover
@@ -308,6 +336,32 @@ function Admin() {
         </div>
       </div>
       </main>
+
+      {modal.open && (
+        <div className="admin-modal-overlay" onClick={closeModal}>
+          <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="admin-modal-header">
+              <h3>{modal.title}</h3>
+              <button className="admin-modal-close" onClick={closeModal}>×</button>
+            </div>
+            <p className="admin-modal-message">{modal.message}</p>
+            <div className="admin-modal-actions">
+              {modal.type === 'confirm' && (
+                <button className="admin-btn admin-btn-ghost" onClick={closeModal} disabled={carregando}>
+                  Cancelar
+                </button>
+              )}
+              <button
+                className={`admin-btn ${modal.type === 'error' ? 'admin-btn-danger' : 'admin-btn-primary'}`}
+                onClick={modal.type === 'confirm' && modal.onConfirm ? modal.onConfirm : closeModal}
+                disabled={carregando}
+              >
+                {modal.type === 'confirm' ? 'Confirmar' : 'OK'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {modalOpen && (
         <div className="admin-modal-overlay" onClick={() => setModalOpen(false)}>
