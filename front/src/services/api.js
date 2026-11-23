@@ -98,3 +98,19 @@ export async function deletarAdmin(token, adminId) {
 
   return data
 }
+
+
+export async function removerConfirmacao(token, id) {
+  const response = await fetch(`${API_URL}/api/v1/confirmacoes/${id}`, {
+    method: 'DELETE',
+    headers: authHeaders(token),
+  })
+
+  const data = await response.json().catch(() => ({}))
+
+  if (!response.ok) {
+    throw new Error(data.detail || 'Erro ao remover confirmação.')
+  }
+
+  return data
+}

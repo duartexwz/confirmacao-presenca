@@ -6,6 +6,7 @@ import {
   listarAdministradores,
   listarConfirmacoes,
   loginAdmin,
+  removerConfirmacao,
 } from './services/api'
 
 const TOKEN_KEY = 'admin_access_token'
@@ -100,6 +101,20 @@ function Admin() {
       })
       setNovoAdmin({ nome: '', username: '', password: '' })
       setModalOpen(false)
+      await carregarDados()
+    } catch (err) {
+      setErro(err.message)
+    } finally {
+      setCarregando(false)
+    }
+  }
+
+  async function handleRemoverConfirmacao(id) {
+    if (!window.confirm('Remover esta confirmação?')) return
+    setCarregando(true)
+    setErro('')
+    try {
+      await removerConfirmacao(token, id)
       await carregarDados()
     } catch (err) {
       setErro(err.message)
@@ -210,18 +225,28 @@ function Admin() {
                 <tr>
                   <th>#</th>
                   <th>Nome</th>
+                  <th>Ações</th>
                 </tr>
               </thead>
               <tbody>
                 {confirmacoes.length === 0 && (
                   <tr>
-                    <td colSpan="2" className="admin-empty">Nenhuma confirmação.</td>
+                    <td colSpan="3" className="admin-empty">Nenhuma confirmação.</td>
                   </tr>
                 )}
                 {confirmacoes.map((c, idx) => (
                   <tr key={c.id}>
                     <td>{idx + 1}</td>
                     <td>{c.nome}</td>
+                    <td>
+                      <button
+                        className="admin-btn admin-btn-danger admin-btn-sm"
+                        onClick={() => handleRemoverConfirmacao(c.id)}
+                        disabled={carregando}
+                      >
+                        Remover
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
