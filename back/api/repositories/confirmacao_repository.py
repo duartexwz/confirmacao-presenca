@@ -11,6 +11,16 @@ import uuid
 
 from asyncpg import Connection
 
+def _coerce_id(value: str):
+    """Aceita id UUID ou inteiro (compatibilidade com schemas legados)."""
+    try:
+        return uuid.UUID(value)
+    except (ValueError, AttributeError):
+        pass
+    if isinstance(value, str) and value.isdigit():
+        return int(value)
+    return value
+
 
 class ConfirmacoesRepository:
     def __init__(self):
@@ -97,9 +107,8 @@ class ConfirmacoesRepository:
         Returns:
             dict | None: Dicionário com `id` e `nome` se encontrado, ou None.
         """
-        try:
-            uid = uuid.UUID(confirmacao_id)
-        except ValueError:
+        uid = _coerce_id(confirmacao_id)
+        if uid is None:
             return None
 
         row = await conn.fetchrow(
@@ -121,9 +130,8 @@ class ConfirmacoesRepository:
         Returns:
             bool: True se o registro foi deletado, False se não existia.
         """
-        try:
-            uid = uuid.UUID(confirmacao_id)
-        except ValueError:
+        uid = _coerce_id(confirmacao_id)
+        if uid is None:
             return False
 
         result = await conn.execute(
