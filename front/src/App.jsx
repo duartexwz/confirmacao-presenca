@@ -11,7 +11,10 @@ import Admin from './Admin'
  * e exibe feedback visual de sucesso ou erro.
  */
 function App() {
-  const isAdminRoute = window.location.pathname.startsWith('/admin')
+  const isAdminRoute =
+    window.location.pathname.startsWith('/admin') ||
+    window.location.hash === '#/admin' ||
+    window.location.hash === '#admin'
   const view = isAdminRoute ? 'admin' : 'home'
   const [nome, setNome] = useState('')
   const [mensagem, setMensagem] = useState('')
