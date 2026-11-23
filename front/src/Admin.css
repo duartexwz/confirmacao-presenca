@@ -188,7 +188,7 @@
 
 .admin-grid {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -197,6 +197,7 @@
 }
 
 .admin-panel {
+  min-width: 520px;
   background-color: var(--bg-cards);
   border-radius: 16px;
   padding: 20px;
@@ -608,8 +609,6 @@
 }
 
 .admin-panel-fixed {
-  width: 600px;
-  max-width: 600px;
   height: 460px;
   max-height: 460px;
   overflow: hidden;
